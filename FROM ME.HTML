@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Georgia, serif;
+}
+
+body{ overflow:hidden; }
+
+/* ===== PAGE ===== */
+.page{
+  width:100vw;
+  height:100vh;
+  position:absolute;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:
+    linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.6)),
+    url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT97btyDtq5ZMnamGvXvg4FNd0PcpsbSp2rWg&s') center/cover no-repeat;
+  color:white;
+  z-index:2;
+}
+
+.page.active{ display:flex; }
+
+/* ===== KUNANG-KUNANG ===== */
+.firefly{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:#ffe066;
+  border-radius:50%;
+  box-shadow:0 0 12px #ffe066;
+  animation:fly linear infinite;
+  z-index:1;
+}
+
+@keyframes fly{
+  0%{
+    transform:translate(0,0);
+    opacity:0;
+  }
+  20%{ opacity:1; }
+  100%{
+    transform:translate(
+      calc(-400px + 800px * var(--x)),
+      calc(-400px + 800px * var(--y))
+    );
+    opacity:0;
+  }
+}
+
+/* ===== PAGE 1 LOGIN ===== */
+.login-box{
+  background:rgba(255,255,255,.15);
+  padding:30px;
+  border-radius:15px;
+  backdrop-filter:blur(6px);
+  text-align:center;
+}
+
+.login-box h2{ margin-bottom:20px; }
+
+.login-box input{
+  width:220px;
+  padding:10px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+}
+
+.login-box button{
+  margin-top:15px;
+  padding:10px 30px;
+  border:none;
+  border-radius:25px;
+  background:#ffb6c1;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.error{
+  margin-top:10px;
+  color:#ffd1d1;
+  font-size:14px;
+}
+
+/* ===== PAGE 2 AMPLOP ===== */
+.intro-text{
+  margin-bottom:25px;
+  font-size:20px;
+  text-align:center;
+}
+
+.envelope{
+  width:320px;
+  height:200px;
+  background:#e6c9a8;
+  border-radius:10px;
+  position:relative;
+  cursor:pointer;
+}
+
+.envelope::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  border-left:160px solid transparent;
+  border-right:160px solid transparent;
+  border-top:100px solid #d4b08a;
+  transform-origin:top;
+  transition:1s;
+}
+
+.envelope.open::before{
+  transform:rotateX(180deg);
+}
+
+.letter{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    width:300px;
+    height:0;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    transition:1.2s;
+    color:#333;
+}
+
+.envelope.open .letter{ height:260px; }
+
+.letter-content{
+  padding:20px;
+  font-size:18px;
+  line-height:1.7;
+  display:none;
+}
+
+.envelope.open .letter-content{ display:block; }
+
+.next-btn{
+  margin-top:25px;
+  padding:12px 36px;
+  border:none;
+  border-radius:30px;
+  background:#ffb6c1;
+  font-size:18px;
+  cursor:pointer;
+}
+
+/* ===== PAGE 3 FOTO ===== */
+.gallery{
+  display:flex;
+  gap:20px;
+}
+
+.gallery img{
+  width:220px;
+  height:300px;
+  object-fit:cover;
+  border-radius:15px;
+  box-shadow:0 0 15px rgba(255,255,255,.4);
+  opacity:0;
+  transform:translateY(30px);
+  animation:fadeUp 1.2s ease forwards;
+}
+
+.gallery img:nth-child(1){ animation-delay:.5s; }
+.gallery img:nth-child(2){ animation-delay:1.5s; }
+.gallery img:nth-child(3){ animation-delay:2.5s; }
+
+@keyframes fadeUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="bgMusic" src="One Direction - 07 Night Changes.mp3" loop></audio>
+
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <div class="login-box">
+    <h2>Masuk dulu 🤍</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Masuk</button>
+    <div class="error" id="error"></div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <p class="intro-text">
+    Ada surat kecil buat kamu 🤍
+  </p>
+
+  <div class="envelope" onclick="openLetter()">
+    <div class="letter">
+      <div class="letter-content">
+        makasih yaaaa guys udah nemenin di sem 1 ini yg sngt darderdor
+        makasihh juga uda jdi tempat aku cerita, mengeluh ah banyak deh haha
+        ga perna merasa seberuntung iniii mungkin klo gada kalian, aku ga bisa survive di perkuliahan ini
+        if u are a movie u are the best part love
+        -from sundrik cansss
+      </div>
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <h2>THANKYUUU GUYS>3 🤍</h2>
+  <div class="gallery">
+    <img src="FOTO 4.jpeg">
+    <img src="kelas.jpeg">
+    <img src="with mamihhh.jpeg">
+  </div>
+</div>
+
+<script>
+/* ===== PAGE & MUSIC ===== */
+let currentPage=1;
+const music=document.getElementById("bgMusic");
+
+function login(){
+  if(username.value && password.value){
+    nextPage();
+  }else{
+    error.innerText="Isi dulu yaa 🤍";
+  }
+}
+
+function nextPage(){
+  document.getElementById(`page${currentPage}`).classList.remove("active");
+  currentPage++;
+  document.getElementById(`page${currentPage}`).classList.add("active");
+
+  // 🎵 LAGU NYALA DI PAGE 2 & 3
+  if(currentPage===2 || currentPage===3){
+    music.volume=0.5;
+    music.play();
+  }else{
+    music.pause();
+    music.currentTime=0;
+  }
+}
+
+/* ===== AMPLOP ===== */
+let opened=false;
+function openLetter(){
+  if(opened) return;
+  opened=true;
+  document.querySelector(".envelope").classList.add("open");
+}
+
+/* ===== KUNANG-KUNANG GENERATOR ===== */
+for(let i=0;i<35;i++){
+  const f=document.createElement("div");
+  f.className="firefly";
+  f.style.left=Math.random()*100+"vw";
+  f.style.top=Math.random()*100+"vh";
+  f.style.animationDuration=5+Math.random()*10+"s";
+  f.style.setProperty("--x",Math.random());
+  f.style.setProperty("--y",Math.random());
+  document.body.appendChild(f);
+}
+function nextPage(){
+    document.getElementById(`page${currentPage}`).classList.remove("active");
+    currentPage++;
+    document.getElementById(`page${currentPage}`).classList.add("active");
+  
+    // 🎵 AMAN DI SEMUA BROWSER
+    if(currentPage===2 || currentPage===3){
+      music.volume=0.4;
+      music.muted=false;
+      music.play().catch(e=>console.log(e));
+    }else{
+      music.pause();
+      music.currentTime=0;
+    }
+  }
+  
+</script>
+
+</body>
+</html>
